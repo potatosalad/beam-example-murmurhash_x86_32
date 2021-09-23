@@ -1,0 +1,6 @@
+-sname murmurhash3_x86_32
+
+-setcookie murmurhash3_x86_32_cookie
+
++K true
++A30

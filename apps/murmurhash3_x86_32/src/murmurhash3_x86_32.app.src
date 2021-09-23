@@ -1,0 +1,19 @@
+%% % @format
+{application, murmurhash3_x86_32,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {murmurhash3_x86_32_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    murmurhash3_x86_32_pure,
+    murmurhash3_x86_32_ref,
+    murmurhash3_x86_32_ycf
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
