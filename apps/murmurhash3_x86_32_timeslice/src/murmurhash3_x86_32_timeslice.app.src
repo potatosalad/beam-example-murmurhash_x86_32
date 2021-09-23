@@ -1,5 +1,5 @@
 %% % @format
-{application, murmurhash3_x86_32_ycf, [
+{application, murmurhash3_x86_32_timeslice, [
     {description, "An OTP application"},
     {vsn, "0.1.0"},
     {registered, []},
