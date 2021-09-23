@@ -66,6 +66,7 @@ murmurhash3_x86_32_ref_nif_hash_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM a
 
 static ErlNifFunc murmurhash3_x86_32_ref_nif_funcs[] = {
     {"hash", 2, murmurhash3_x86_32_ref_nif_hash_2, ERL_NIF_NORMAL_JOB_BOUND},
+    {"hash_dirty", 2, murmurhash3_x86_32_ref_nif_hash_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
 };
 
 static int murmurhash3_x86_32_ref_nif_instances = 0;

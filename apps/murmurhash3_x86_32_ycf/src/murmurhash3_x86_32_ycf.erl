@@ -3,6 +3,7 @@
 
 %% API
 -export([
+    reds/0,
     hash/2
 ]).
 %% Internal API
@@ -25,6 +26,13 @@
 %%%=============================================================================
 %%% API functions
 %%%=============================================================================
+
+reds() ->
+    Key = binary:copy(<<255>>, 1 * 1024 * 1024),
+    {reductions, R1} = erlang:process_info(self(), reductions),
+    Out = hash(0, Key),
+    {reductions, R2} = erlang:process_info(self(), reductions),
+    {Out, R2 - R1}.
 
 -spec hash(Seed, Key) -> Out when Seed :: seed(), Key :: iolist(), Out :: murmurhash3_x86_32_ycf_nif:out().
 hash(Seed, Key) when ?is_seed(Seed) andalso ?is_key(Key) ->

@@ -5,7 +5,8 @@
 
 %% NIF API
 -export([
-    hash/2
+    hash/2,
+    hash_dirty/2
 ]).
 
 %% Types
@@ -23,6 +24,10 @@
 
 -spec hash(Seed, Key) -> Out when Seed :: seed(), Key :: iolist(), Out :: out().
 hash(_Seed, _Key) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+-spec hash_dirty(Seed, Key) -> Out when Seed :: seed(), Key :: iolist(), Out :: out().
+hash_dirty(_Seed, _Key) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
 %%%-----------------------------------------------------------------------------

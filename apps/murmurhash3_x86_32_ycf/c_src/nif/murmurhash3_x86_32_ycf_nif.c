@@ -86,7 +86,16 @@ static ERL_NIF_TERM murmurhash3_x86_32_ycf_nif_hash_2_continue(ErlNifEnv *env, i
 
 /* NIF Function Definitions */
 
-#define REDUCTIONS_UNTIL_YCF_YIELD() (4000)
+#define REDUCTIONS_UNTIL_YCF_YIELD() (10000)
+#define BUMP_ALL_REDS(env)                                                                                             \
+    do {                                                                                                               \
+        (void)enif_consume_timeslice((env), 100);                                                                      \
+    } while (0)
+#define BUMP_REMAINING_REDS(env, nr_of_reductions)                                                                     \
+    do {                                                                                                               \
+        (void)enif_consume_timeslice(                                                                                  \
+            (env), (int)((REDUCTIONS_UNTIL_YCF_YIELD() - (nr_of_reductions)) / REDUCTIONS_UNTIL_YCF_YIELD()));         \
+    } while (0)
 
 ERL_NIF_TERM
 murmurhash3_x86_32_ycf_nif_hash_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
@@ -159,6 +168,7 @@ murmurhash3_x86_32_ycf_nif_hash_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM a
     );
 
     if (YCF_IS_YIELDED(trap_state)) {
+        BUMP_ALL_REDS(env);
         murmurhash3_x86_32_ycf_nif_trap_t *trap =
             enif_alloc_resource(murmurhash3_x86_32_ycf_nif_trap_resource_type, sizeof(*trap));
         if (trap == NULL) {
@@ -178,6 +188,7 @@ murmurhash3_x86_32_ycf_nif_hash_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM a
         return enif_schedule_nif(env, "murmurhash3_x86_32_ycf_nif_hash_2_continue", ERL_NIF_NORMAL_JOB_BOUND,
                                  murmurhash3_x86_32_ycf_nif_hash_2_continue, 1, newargv);
     } else {
+        BUMP_REMAINING_REDS(env, nr_of_reductions);
         (void)murmurhash3_x86_32_final(ctx, out_bin.data);
         (void)murmurhash3_x86_32_destroy(ctx);
         (void)enif_free((void *)ctx);
@@ -202,9 +213,11 @@ murmurhash3_x86_32_ycf_nif_hash_2_continue(ErlNifEnv *env, int argc, const ERL_N
                                                      NULL               // void *ycf_extra_context
     );
     if (YCF_IS_YIELDED(trap->state)) {
+        BUMP_ALL_REDS(env);
         return enif_schedule_nif(env, "murmurhash3_x86_32_ycf_nif_hash_2_continue", ERL_NIF_NORMAL_JOB_BOUND,
                                  murmurhash3_x86_32_ycf_nif_hash_2_continue, argc, argv);
     } else {
+        BUMP_REMAINING_REDS(env, nr_of_reductions);
         (void)murmurhash3_x86_32_final(trap->ctx, trap->out_bin.data);
         (void)murmurhash3_x86_32_destroy(trap->ctx);
         trap->ctx = NULL;
