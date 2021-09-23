@@ -1,3 +1,5 @@
+#include "portable_endian.h"
+
 #ifndef YCF_YIELDING_C_FUN_HELPERS
 #define YCF_YIELDING_C_FUN_HELPERS 1
 #include <string.h>
@@ -148,8 +150,6 @@ void murmurhash3_x86_32_update_ycf_gen_destroy(void *ycf_my_trap_state_param);
 /* clang-format off */
 YCF_GCC_DIAG_ON(unused-function)
 /* clang-format on */
-
-#include "portable_endian.h"
 
 #ifdef YCF_YIELD_CODE_GENERATED
 #include "../codegen/murmurhash3_x86_32.h"
